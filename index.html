@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>KETICK · Terminal Platform</title>
+    <title>KETICK · Terminal Pro</title>
     <style>
         * {
             margin: 0;
@@ -12,210 +12,227 @@
         }
 
         body {
-            background: radial-gradient(circle at 20% 30%, #0a0f0a, #030603);
+            background: radial-gradient(circle at 30% 10%, #2c2e3a, #14151c);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Fira Code', 'Courier New', 'JetBrains Mono', monospace;
-            padding: 1.5rem;
+            font-family: 'SF Mono', 'Menlo', 'Monaco', 'Cascadia Code', 'Fira Code', monospace;
+            padding: 2rem;
         }
 
-        /* Terminal utama */
+        /* Terminal utama – rupa macOS */
         .terminal {
             max-width: 1300px;
             width: 100%;
-            background: #0c0f0c;
+            background: rgba(28, 30, 36, 0.92);
+            backdrop-filter: blur(14px);
             border-radius: 1.2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px #2a3a2a, 0 0 0 4px #0a1f0a;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
             overflow: hidden;
-            backdrop-filter: blur(0px);
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
-        /* Header macam terminal retro */
+        /* Header macam Terminal.app */
         .terminal-header {
-            background: #111811;
-            padding: 0.8rem 1.2rem;
+            background: rgba(38, 40, 46, 0.9);
+            padding: 0.7rem 1.2rem;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            border-bottom: 1px solid #2c3a2c;
-            flex-wrap: wrap;
+            gap: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
+
+        /* Butang trafik macOS */
         .win-dots {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.55rem;
+            margin-right: 0.5rem;
         }
         .dot {
             width: 13px;
             height: 13px;
             border-radius: 50%;
-            background: #3e5540;
-            transition: 0.2s;
+            transition: all 0.15s;
+            box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
         }
-        .dot.red { background: #3e2a2a; }
-        .dot.yellow { background: #5a5430; }
-        .dot.green { background: #2f6b2f; }
+        .dot.red { background: #ff5f57; border: 1px solid #e0443c; }
+        .dot.yellow { background: #ffbd2e; border: 1px solid #e09f1a; }
+        .dot.green { background: #28c840; border: 1px solid #1a9e2e; }
+
         .terminal-title {
-            color: #9bbf8b;
+            color: #e2e4e8;
             font-size: 0.8rem;
-            letter-spacing: 1px;
-            margin-left: auto;
+            letter-spacing: 0.3px;
             font-weight: 500;
-            background: #1e251e;
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-            font-family: monospace;
+            background: rgba(55, 58, 66, 0.7);
+            padding: 0.2rem 0.9rem;
+            border-radius: 20px;
+            font-family: 'SF Mono', monospace;
+            backdrop-filter: blur(4px);
         }
         .terminal-title i {
             font-style: normal;
-            color: #a5f07a;
+            color: #5fcb5c;
+            font-weight: 500;
         }
 
-        /* Kawasan output */
+        /* Kawasan output dengan font nyaman */
         .terminal-output {
-            background: #030603;
-            padding: 1.4rem 1.2rem;
+            background: #1c1e24;
+            padding: 1.4rem 1.4rem;
             min-height: 480px;
             max-height: 62vh;
             overflow-y: auto;
-            font-size: 0.95rem;
-            line-height: 1.45;
-            color: #c3ffb2;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: #dddfe6;
             scroll-behavior: smooth;
         }
         .terminal-output::-webkit-scrollbar {
             width: 8px;
-            background: #142014;
+            background: #2a2c33;
         }
         .terminal-output::-webkit-scrollbar-thumb {
-            background: #3f7540;
+            background: #5c5f6b;
             border-radius: 10px;
         }
 
-        /* baris command yang diinput */
+        /* Baris command ala zsh */
         .cmd-line {
             display: flex;
             align-items: baseline;
             flex-wrap: wrap;
-            gap: 0.4rem;
-            margin: 0.8rem 0 0.2rem;
-            border-top: 1px solid #1e2a1e;
-            padding-top: 0.6rem;
+            gap: 0.5rem;
+            background: #1c1e24;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 0.8rem 1.4rem;
         }
         .prompt {
-            color: #9fff7a;
-            font-weight: bold;
-            font-size: 1rem;
+            color: #5fcb5c;
+            font-weight: 500;
+            font-size: 0.95rem;
             white-space: nowrap;
+            font-family: monospace;
         }
-        .prompt span {
-            color: #74c97c;
+        .prompt span:first-child {
+            color: #78d96e;
+        }
+        .prompt .path {
+            color: #8d96b0;
         }
         .input-field {
             flex: 1;
             background: transparent;
             border: none;
-            color: #e0ffc0;
-            font-family: 'Fira Code', monospace;
+            color: #f0f3fc;
+            font-family: 'SF Mono', 'Menlo', monospace;
             font-size: 0.95rem;
             outline: none;
-            caret-color: #93ff7a;
+            caret-color: #5fcb5c;
             padding: 0.2rem 0;
         }
         .input-field::placeholder {
-            color: #3f6440;
-            font-style: italic;
+            color: #5a5e72;
+            font-style: normal;
+            font-size: 0.85rem;
         }
 
-        /* footer ringan */
+        /* Footer minimal */
         .terminal-footer {
-            background: #0a100a;
-            border-top: 1px solid #233023;
-            padding: 0.6rem 1.2rem;
+            background: rgba(26, 28, 34, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.55rem 1.4rem;
             font-size: 0.7rem;
-            color: #6f8f6a;
+            color: #858aa8;
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
             font-family: monospace;
+            letter-spacing: 0.2px;
         }
 
-        /* output styling */
+        /* output styling - clean modern */
         .output-block {
             margin: 0.2rem 0 0.5rem 0;
             white-space: pre-wrap;
             word-break: break-word;
         }
         .command-history {
-            color: #b5ff99;
             margin-top: 0.3rem;
+            color: #cbd5e6;
+            opacity: 0.85;
+            font-size: 0.9rem;
         }
-        .command-history span {
-            color: #cdffa0;
+        .command-history span:first-child {
+            color: #5fcb5c;
         }
         .error-msg {
-            color: #ffa098;
-            border-left: 3px solid #ff5e4a;
-            padding-left: 0.7rem;
+            color: #ff8a7a;
+            border-left: 3px solid #ff6b5b;
+            padding-left: 0.75rem;
+            background: rgba(255, 80, 70, 0.08);
+            border-radius: 8px;
         }
         .success-msg {
-            color: #b3ffa7;
-            border-left: 3px solid #74f05c;
-            padding-left: 0.7rem;
+            color: #a3f0a0;
+            border-left: 3px solid #5fcb5c;
+            padding-left: 0.75rem;
+            background: rgba(95, 203, 92, 0.08);
+            border-radius: 8px;
         }
         .product-table {
             display: grid;
             grid-template-columns: auto 1fr auto;
-            gap: 0.4rem 1rem;
-            margin-top: 0.5rem;
-            background: #0a100c;
-            padding: 0.6rem;
-            border-radius: 12px;
-            border: 1px solid #2a452a;
+            gap: 0.6rem 1.2rem;
+            margin-top: 0.6rem;
+            background: rgba(38, 40, 48, 0.7);
+            padding: 0.8rem;
+            border-radius: 14px;
+            border: 1px solid rgba(95, 203, 92, 0.2);
+            backdrop-filter: blur(2px);
         }
         .prod-name {
-            font-weight: bold;
-            color: #f0ffaa;
+            font-weight: 600;
+            color: #e6ffdb;
         }
         .prod-desc {
-            color: #b1e0a1;
+            color: #bcc4dc;
         }
         .prod-price {
-            color: #ffea9e;
+            color: #ffdfa5;
         }
         hr {
-            border-color: #2a462a;
-            margin: 0.5rem 0;
+            border-color: rgba(95, 203, 92, 0.3);
+            margin: 0.6rem 0;
         }
         .ascii-banner {
-            color: #8ed67a;
-            font-size: 0.7rem;
+            color: #8fdd88;
+            font-size: 0.65rem;
             line-height: 1.2;
             white-space: pre;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.6rem;
         }
         a {
-            color: #a5ff8e;
+            color: #90f07c;
             text-decoration: none;
             border-bottom: 1px dashed #6ea65e;
         }
         a:hover {
-            color: #d0ffb0;
+            color: #c2ffae;
         }
-        @media (max-width: 650px) {
+        @media (max-width: 680px) {
             body {
-                padding: 0.8rem;
+                padding: 1rem;
             }
             .terminal-output {
                 padding: 1rem;
                 font-size: 0.85rem;
-                max-height: 55vh;
             }
             .product-table {
                 grid-template-columns: 1fr;
-                gap: 0.3rem;
+                gap: 0.4rem;
             }
             .prompt {
                 font-size: 0.85rem;
@@ -233,7 +250,7 @@
             <div class="dot green"></div>
         </div>
         <div class="terminal-title">
-            <i>❯❯ KETICK_TERMINAL :: build v2.0</i>
+            <i>❯❯ KETICK :: Terminal v2.0</i>
         </div>
     </div>
 
@@ -244,14 +261,14 @@
 
     <div class="cmd-line" id="cmdForm">
         <div class="prompt">
-            <span>➜</span> <span style="color:#94e07a;">ketick@system</span>:<span style="color:#b3ffa7;">~</span>$
+            <span>➜</span> <span class="path">ketick@MacBook</span> <span style="color:#dddfe6;">~</span> %
         </div>
-        <input type="text" class="input-field" id="terminalInput" autofocus placeholder="taip 'help' untuk senarai command..." spellcheck="false">
+        <input type="text" class="input-field" id="terminalInput" autofocus placeholder="taip 'help' untuk arahan..." spellcheck="false">
     </div>
 
     <div class="terminal-footer">
-        <span>⚡ KETICK · build & sell systems</span>
-        <span>⌨️  command-line interface  |  v1.0</span>
+        <span>⚡ KETICK · build & sell systems | coding house</span>
+        <span>⌨️  zsh‑like · v1.0</span>
     </div>
 </div>
 
@@ -284,15 +301,14 @@
         } else if (type === "success") {
             msgDiv.classList.add("success-msg");
         } else {
-            msgDiv.style.color = "#c3ffb2";
+            msgDiv.style.color = "#dddfe6";
         }
         if (typeof content === "string") {
-            msgDiv.innerHTML = content; // safe kerana kita kawal string dari dalam
+            msgDiv.innerHTML = content;
         } else {
             msgDiv.appendChild(content);
         }
         outputDiv.appendChild(msgDiv);
-        // auto scroll ke bawah
         outputDiv.scrollTop = outputDiv.scrollHeight;
     }
 
@@ -300,20 +316,18 @@
     function appendCommand(cmdText) {
         const cmdDiv = document.createElement("div");
         cmdDiv.classList.add("command-history");
-        cmdDiv.innerHTML = `<span style="color:#7ecf70;">➜ ketick@system:~$</span> <span style="color:#f3ffcf;">${escapeHtml(cmdText)}</span>`;
+        cmdDiv.innerHTML = `<span>➜ ketick@MacBook ~ %</span> <span style="color:#f0f3fc;">${escapeHtml(cmdText)}</span>`;
         outputDiv.appendChild(cmdDiv);
         outputDiv.scrollTop = outputDiv.scrollHeight;
     }
 
-    // helper escape html untuk keselamatan
+    // helper escape html
     function escapeHtml(str) {
         return str.replace(/[&<>]/g, function(m) {
             if (m === '&') return '&amp;';
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
         });
     }
 
@@ -322,29 +336,27 @@
         const container = document.createElement("div");
         container.style.margin = "0.6rem 0";
         const title = document.createElement("div");
-        title.innerHTML = "<strong>📦  SENARAI SISTEM YANG DISEDIAKAN oleh KETICK  📦</strong>";
+        title.innerHTML = "<strong>📦  KATALOG SISTEM KETICK  📦</strong>";
         title.style.marginBottom = "0.8rem";
-        title.style.color = "#e2ffc7";
+        title.style.color = "#e5ffcf";
+        title.style.fontWeight = "500";
         container.appendChild(title);
         
         const gridDiv = document.createElement("div");
         gridDiv.className = "product-table";
-        gridDiv.style.display = "grid";
-        gridDiv.style.gridTemplateColumns = "1fr 2fr 1fr";
-        gridDiv.style.gap = "0.5rem 1rem";
         
         // header
-        const headerName = document.createElement("div"); headerName.textContent = "SYSTEM"; headerName.style.fontWeight="bold"; headerName.style.color="#bbff99";
-        const headerDesc = document.createElement("div"); headerDesc.textContent = "DESCRIPTION"; headerDesc.style.fontWeight="bold";
-        const headerPrice = document.createElement("div"); headerPrice.textContent = "PRICE"; headerPrice.style.fontWeight="bold";
+        const headerName = document.createElement("div"); headerName.textContent = "SYSTEM"; headerName.style.fontWeight="600"; headerName.style.color="#bbff99";
+        const headerDesc = document.createElement("div"); headerDesc.textContent = "DESCRIPTION"; headerDesc.style.fontWeight="600";
+        const headerPrice = document.createElement("div"); headerPrice.textContent = "PRICE"; headerPrice.style.fontWeight="600";
         gridDiv.appendChild(headerName);
         gridDiv.appendChild(headerDesc);
         gridDiv.appendChild(headerPrice);
         
         products.forEach(prod => {
-            const nameDiv = document.createElement("div"); nameDiv.textContent = prod.name; nameDiv.style.color="#f3ffb0"; nameDiv.style.fontWeight="bold";
-            const descDiv = document.createElement("div"); descDiv.textContent = prod.desc; descDiv.style.color="#c2f0b0";
-            const priceDiv = document.createElement("div"); priceDiv.textContent = prod.price; priceDiv.style.color="#ffe3a3";
+            const nameDiv = document.createElement("div"); nameDiv.textContent = prod.name; nameDiv.style.color="#f0ffd6"; nameDiv.style.fontWeight="500";
+            const descDiv = document.createElement("div"); descDiv.textContent = prod.desc; descDiv.style.color="#cbd5f0";
+            const priceDiv = document.createElement("div"); priceDiv.textContent = prod.price; priceDiv.style.color="#ffe2a4";
             gridDiv.appendChild(nameDiv);
             gridDiv.appendChild(descDiv);
             gridDiv.appendChild(priceDiv);
@@ -352,7 +364,7 @@
         container.appendChild(gridDiv);
         
         const footerNote = document.createElement("div");
-        footerNote.innerHTML = "<hr>✨ Untuk membeli sistem, gunakan: <span style='background:#1f2a1f; padding:2px 6px; border-radius:6px;'>buy [nama_produk]</span> — contoh: buy tickpos";
+        footerNote.innerHTML = "<hr>✨ Beli sistem: <code style='background:#2f323c; padding:2px 8px; border-radius:20px;'>buy [nama_produk]</code> — contoh: buy tickpos atau buy 'TickPOS Pro'";
         footerNote.style.marginTop = "0.8rem";
         footerNote.style.fontSize = "0.85rem";
         container.appendChild(footerNote);
@@ -362,10 +374,10 @@
     // command about
     function showAbout() {
         const aboutHtml = `
-            <div style="background:#0a1208; padding:0.7rem; border-radius:12px; border-left: 5px solid #7fe07a;">
-            <strong style="color:#c6ff9e;">⎯ KETICK ⎯</strong><br>
+            <div style="background:rgba(40, 44, 55, 0.6); padding:0.8rem; border-radius:16px; border-left: 4px solid #5fcb5c;">
+            <strong style="color:#d0ffbe;">⎯ KETICK — coding studio ⎯</strong><br>
             KETICK ialah rumah pembangunan sistem (coding house) yang membina perisian tersuai & menjual sistem berskala enterprise. 
-            Dari sistem retail, CRM, hingga automasi korporat — kami gabungkan kecekapan kod dengan reka bentuk futuristik. <br>
+            Dari sistem retail, CRM, automasi korporat — kami gabungkan kecekapan kod dengan reka bentuk futuristik. <br>
             📍 Setiap sistem dibangunkan dengan teknologi moden (React, Laravel, Python) & sokongan sepenuh masa.<br>
             🌐 <strong>Misi:</strong> Memperkasakan perniagaan melalui terminal & software yang mantap.
             </div>
@@ -390,8 +402,8 @@
     // custom dev service
     function showCustomDev() {
         const customHtml = `
-            <div style="border:1px solid #3c6e3c; border-radius:14px; padding:0.8rem; background:#0b130b;">
-            <span style="color:#f0ffaa;">⚙️ PERKHIDMATAN BUILD-TO-ORDER ⚙️</span><br>
+            <div style="border:1px solid #5fcb5c55; border-radius:18px; padding:0.8rem; background:rgba(30, 35, 45, 0.7);">
+            <span style="color:#e2ffbc;">⚙️ PERKHIDMATAN BUILD-TO-ORDER ⚙️</span><br>
             KETICK membina sistem 100% tersuai mengikut keperluan perniagaan anda:<br>
             • Sistem ERP / HRMS / Inventory lanjutan<br>
             • Aplikasi web & mobile + API integration<br>
@@ -416,9 +428,8 @@
             appendToTerminal(`❌ Produk "${args}" tidak ditemui. Taip 'products' untuk senarai sistem yang sah.`, "error");
             return;
         }
-        // proses pembelian simulasi
         let buyMsg = `
-            <div style="background:#0d2a0d; border-radius:16px; padding:0.7rem 1rem; margin:0.3rem 0;">
+            <div style="background:rgba(30, 48, 30, 0.5); border-radius:20px; padding:0.7rem 1rem; margin:0.3rem 0; border:1px solid #5fcb5c55;">
             🧾 <strong style="color:#e9ffb4;">ORDER INITIATED</strong> — ${product.name}<br>
             💰 Harga: ${product.price}<br>
             📦 Penerangan: ${product.desc}<br>
@@ -433,33 +444,32 @@
     // help command
     function showHelp() {
         const helpText = `
-            <div style="background:#0b1009; border-radius:12px; padding:0.6rem 1rem;">
+            <div style="background:rgba(35, 38, 48, 0.7); border-radius:18px; padding:0.7rem 1rem;">
             <strong>🖥️  KETICK TERMINAL HELP  —  arahan tersedia</strong><br>
-            <table style="width:100%; border-spacing:0 6px; margin-top:0.5rem;">
-                <tr><td style="color:#b2ff8f;">help</td><td> → Papar senarai command ini.</td></tr>
-                <tr><td style="color:#b2ff8f;">products / list</td><td> → Senarai sistem yang dijual oleh KETICK.</td></tr>
-                <tr><td style="color:#b2ff8f;">buy [id/nama]</td><td> → Beli sistem. Contoh: buy tickpos , buy TickPOS Pro</td></tr>
-                <tr><td style="color:#b2ff8f;">about</td><td> → Maklumat syarikat KETICK & visi coding.</td></tr>
-                <tr><td style="color:#b2ff8f;">contact</td><td> → Hubungi pasukan jualan / sokongan.</td></tr>
-                <tr><td style="color:#b2ff8f;">custom / dev</td><td> → Perkhidmatan pembangunan sistem tempahan khas.</td></tr>
-                <tr><td style="color:#b2ff8f;">clear</td><td> → Bersihkan skrin terminal.</td></tr>
+            <table style="width:100%; border-spacing:0 8px; margin-top:0.5rem;">
+                <tr><td style="color:#b2ff8f;">help</td><td style="color:#bdc3db;">→ Papar senarai command ini.</td></tr>
+                <tr><td style="color:#b2ff8f;">products / list</td><td style="color:#bdc3db;">→ Senarai sistem yang dijual oleh KETICK.</td></tr>
+                <tr><td style="color:#b2ff8f;">buy [id/nama]</td><td style="color:#bdc3db;">→ Beli sistem. Contoh: buy tickpos , buy TickPOS Pro</td></tr>
+                <tr><td style="color:#b2ff8f;">about</td><td style="color:#bdc3db;">→ Maklumat syarikat KETICK & visi coding.</td></tr>
+                <tr><td style="color:#b2ff8f;">contact</td><td style="color:#bdc3db;">→ Hubungi pasukan jualan / sokongan.</td></tr>
+                <tr><td style="color:#b2ff8f;">custom / dev</td><td style="color:#bdc3db;">→ Perkhidmatan pembangunan sistem tempahan khas.</td></tr>
+                <tr><td style="color:#b2ff8f;">clear</td><td style="color:#bdc3db;">→ Bersihkan skrin terminal.</td></tr>
             </table>
-            <hr style="border-color:#2c482c;">
+            <hr style="border-color:#3a4050;">
             <i>💡 Petua: KETICK juga membina sistem dari awal (coding) — command 'custom' untuk maklumat lanjut.</i>
             </div>
         `;
         appendToTerminal(helpText);
     }
 
-    // fungsi clear output
+    // clear output
     function clearTerminal() {
         while (outputDiv.firstChild) {
             outputDiv.removeChild(outputDiv.firstChild);
         }
-        // tambah banner minimal selepas clear (rasa seperti terminal bersih)
         const cleanBanner = document.createElement("div");
         cleanBanner.className = "output-block";
-        cleanBanner.innerHTML = `<span style="color:#6eae5a;">✦ terminal cleared ✦   ketick@system ready.</span><br>`;
+        cleanBanner.innerHTML = `<span style="color:#7dcc78;">✦ terminal cleared ✦   ketick@system ready.</span><br>`;
         outputDiv.appendChild(cleanBanner);
     }
 
@@ -468,12 +478,10 @@
         const cmd = rawCmd.trim().toLowerCase();
         if (cmd === "") return;
 
-        // split untuk argumen
         const parts = rawCmd.trim().split(/\s+/);
         const mainCmd = parts[0].toLowerCase();
         const args = parts.slice(1).join(" ");
 
-        // routing command
         switch (mainCmd) {
             case "help":
                 showHelp();
@@ -503,28 +511,21 @@
         }
     }
 
-    // fungsi untuk memproses input user dari form
     function onCommandSubmit(e) {
         e.preventDefault();
         const cmdText = inputEl.value;
         if (cmdText === "") {
-            inputEl.value = "";
             inputEl.focus();
             return;
         }
-        // simpan ke history
         commandHistory.push(cmdText);
         historyIndex = commandHistory.length;
-        // display command
         appendCommand(cmdText);
-        // process
         handleCommand(cmdText);
-        // clear input
         inputEl.value = "";
         inputEl.focus();
     }
 
-    // history navigation
     function handleHistoryKey(e) {
         if (e.key === "ArrowUp") {
             e.preventDefault();
@@ -532,7 +533,7 @@
             if (historyIndex > 0) {
                 historyIndex--;
             } else if (historyIndex === 0) {
-                // stay on first
+                // stay
             } else {
                 historyIndex = commandHistory.length - 1;
             }
@@ -554,17 +555,17 @@
         }
     }
 
-    // tampilan sambutan / welcome message
+    // sambutan dengan elegan
     function initWelcome() {
         const ascii = `
-        ╔════════════════════════════════════════════════════╗
-        ║  ██╗  ██╗███████╗████████╗██╗ ██████╗██╗  ██╗     ║
-        ║  ██║ ██╔╝██╔════╝╚══██╔══╝██║██╔════╝██║ ██╔╝     ║
-        ║  █████╔╝ █████╗     ██║   ██║██║     █████╔╝      ║
-        ║  ██╔═██╗ ██╔══╝     ██║   ██║██║     ██╔═██╗      ║
-        ║  ██║  ██╗███████╗   ██║   ██║╚██████╗██║  ██╗     ║
-        ║  ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝ ╚═════╝╚═╝  ╚═╝     ║
-        ╚════════════════════════════════════════════════════╝
+        ╔════════════════════════════════════════════════════════╗
+        ║   ██╗  ██╗███████╗████████╗██╗ ██████╗██╗  ██╗        ║
+        ║   ██║ ██╔╝██╔════╝╚══██╔══╝██║██╔════╝██║ ██╔╝        ║
+        ║   █████╔╝ █████╗     ██║   ██║██║     █████╔╝         ║
+        ║   ██╔═██╗ ██╔══╝     ██║   ██║██║     ██╔═██╗         ║
+        ║   ██║  ██╗███████╗   ██║   ██║╚██████╗██║  ██╗        ║
+        ║   ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝ ╚═════╝╚═╝  ╚═╝        ║
+        ╚════════════════════════════════════════════════════════╝
         `;
         const welcomeDiv = document.createElement("div");
         welcomeDiv.className = "output-block";
@@ -572,16 +573,17 @@
         welcomeDiv.style.fontSize = "0.7rem";
         welcomeDiv.style.lineHeight = "1.2";
         welcomeDiv.style.color = "#9bdb86";
+        welcomeDiv.style.opacity = "0.9";
         welcomeDiv.innerHTML = ascii;
         outputDiv.appendChild(welcomeDiv);
         
         const intro = document.createElement("div");
         intro.className = "output-block";
         intro.innerHTML = `
-            <div style="border-left: 4px solid #6bc46b; padding-left: 12px; margin: 10px 0 6px;">
+            <div style="border-left: 4px solid #5fcb5c; padding-left: 14px; margin: 12px 0 8px;">
             ✨ <strong>KETICK TERMINAL PLATFORM</strong> ✨<br>
             • Kami membina & menjual sistem perniagaan moden.<br>
-            • Gunakan command <span style="background:#1e2a1e; padding:0 6px;">help</span> untuk terokai produk, harga, dan perkhidmatan coding.<br>
+            • Gunakan command <span style="background:#2a2e3a; padding:0 6px; border-radius:12px;">help</span> untuk terokai produk, harga, dan perkhidmatan coding.<br>
             • Sistem boleh dibeli terus melalui terminal ini — <strong>taip 'products'</strong> untuk melihat katalog.<br>
             🧬 <em>"Code. Deploy. Dominate."</em>
             </div>
@@ -589,20 +591,17 @@
         outputDiv.appendChild(intro);
         const promptHint = document.createElement("div");
         promptHint.className = "output-block";
-        promptHint.style.marginTop = "8px";
-        promptHint.innerHTML = `💻 ➜ Taip arahan anda di bawah. Contoh: products , buy tickpos , about`;
+        promptHint.style.marginTop = "6px";
+        promptHint.innerHTML = `💻 ➜ Taip arahan di bawah. Contoh: products , buy tickpos , about`;
         outputDiv.appendChild(promptHint);
         outputDiv.scrollTop = outputDiv.scrollHeight;
     }
 
-    // event listener untuk form & input
     cmdForm.addEventListener("submit", onCommandSubmit);
     inputEl.addEventListener("keydown", handleHistoryKey);
-    // fokus sentiasa
     inputEl.addEventListener("click", () => inputEl.focus());
     document.body.addEventListener("click", () => inputEl.focus());
 
-    // muat turun awal
     initWelcome();
 </script>
 </body>
