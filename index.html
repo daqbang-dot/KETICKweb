@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KETICK · Terminal Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0f0a, #030603);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fira Code', 'Courier New', 'JetBrains Mono', monospace;
+            padding: 1.5rem;
+        }
+
+        /* Terminal utama */
+        .terminal {
+            max-width: 1300px;
+            width: 100%;
+            background: #0c0f0c;
+            border-radius: 1.2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px #2a3a2a, 0 0 0 4px #0a1f0a;
+            overflow: hidden;
+            backdrop-filter: blur(0px);
+            transition: all 0.2s;
+        }
+
+        /* Header macam terminal retro */
+        .terminal-header {
+            background: #111811;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 1px solid #2c3a2c;
+            flex-wrap: wrap;
+        }
+        .win-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #3e5540;
+            transition: 0.2s;
+        }
+        .dot.red { background: #3e2a2a; }
+        .dot.yellow { background: #5a5430; }
+        .dot.green { background: #2f6b2f; }
+        .terminal-title {
+            color: #9bbf8b;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            margin-left: auto;
+            font-weight: 500;
+            background: #1e251e;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-family: monospace;
+        }
+        .terminal-title i {
+            font-style: normal;
+            color: #a5f07a;
+        }
+
+        /* Kawasan output */
+        .terminal-output {
+            background: #030603;
+            padding: 1.4rem 1.2rem;
+            min-height: 480px;
+            max-height: 62vh;
+            overflow-y: auto;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            color: #c3ffb2;
+            scroll-behavior: smooth;
+        }
+        .terminal-output::-webkit-scrollbar {
+            width: 8px;
+            background: #142014;
+        }
+        .terminal-output::-webkit-scrollbar-thumb {
+            background: #3f7540;
+            border-radius: 10px;
+        }
+
+        /* baris command yang diinput */
+        .cmd-line {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.8rem 0 0.2rem;
+            border-top: 1px solid #1e2a1e;
+            padding-top: 0.6rem;
+        }
+        .prompt {
+            color: #9fff7a;
+            font-weight: bold;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+        .prompt span {
+            color: #74c97c;
+        }
+        .input-field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #e0ffc0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            outline: none;
+            caret-color: #93ff7a;
+            padding: 0.2rem 0;
+        }
+        .input-field::placeholder {
+            color: #3f6440;
+            font-style: italic;
+        }
+
+        /* footer ringan */
+        .terminal-footer {
+            background: #0a100a;
+            border-top: 1px solid #233023;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.7rem;
+            color: #6f8f6a;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            font-family: monospace;
+        }
+
+        /* output styling */
+        .output-block {
+            margin: 0.2rem 0 0.5rem 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .command-history {
+            color: #b5ff99;
+            margin-top: 0.3rem;
+        }
+        .command-history span {
+            color: #cdffa0;
+        }
+        .error-msg {
+            color: #ffa098;
+            border-left: 3px solid #ff5e4a;
+            padding-left: 0.7rem;
+        }
+        .success-msg {
+            color: #b3ffa7;
+            border-left: 3px solid #74f05c;
+            padding-left: 0.7rem;
+        }
+        .product-table {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 0.4rem 1rem;
+            margin-top: 0.5rem;
+            background: #0a100c;
+            padding: 0.6rem;
+            border-radius: 12px;
+            border: 1px solid #2a452a;
+        }
+        .prod-name {
+            font-weight: bold;
+            color: #f0ffaa;
+        }
+        .prod-desc {
+            color: #b1e0a1;
+        }
+        .prod-price {
+            color: #ffea9e;
+        }
+        hr {
+            border-color: #2a462a;
+            margin: 0.5rem 0;
+        }
+        .ascii-banner {
+            color: #8ed67a;
+            font-size: 0.7rem;
+            line-height: 1.2;
+            white-space: pre;
+            margin-bottom: 0.8rem;
+        }
+        a {
+            color: #a5ff8e;
+            text-decoration: none;
+            border-bottom: 1px dashed #6ea65e;
+        }
+        a:hover {
+            color: #d0ffb0;
+        }
+        @media (max-width: 650px) {
+            body {
+                padding: 0.8rem;
+            }
+            .terminal-output {
+                padding: 1rem;
+                font-size: 0.85rem;
+                max-height: 55vh;
+            }
+            .product-table {
+                grid-template-columns: 1fr;
+                gap: 0.3rem;
+            }
+            .prompt {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="terminal">
+    <div class="terminal-header">
+        <div class="win-dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+        </div>
+        <div class="terminal-title">
+            <i>❯❯ KETICK_TERMINAL :: build v2.0</i>
+        </div>
+    </div>
+
+    <div class="terminal-output" id="terminalOutput">
+        <!-- output akan diisi oleh JS -->
+        <div class="output-block welcome-msg"></div>
+    </div>
+
+    <div class="cmd-line" id="cmdForm">
+        <div class="prompt">
+            <span>➜</span> <span style="color:#94e07a;">ketick@system</span>:<span style="color:#b3ffa7;">~</span>$
+        </div>
+        <input type="text" class="input-field" id="terminalInput" autofocus placeholder="taip 'help' untuk senarai command..." spellcheck="false">
+    </div>
+
+    <div class="terminal-footer">
+        <span>⚡ KETICK · build & sell systems</span>
+        <span>⌨️  command-line interface  |  v1.0</span>
+    </div>
+</div>
+
+<script>
+    // ----- DATA PRODUK (Sistem yang dijual & dibina oleh KETICK) -----
+    const products = [
+        { id: "tickpos", name: "TickPOS Pro", desc: "Sistem Point-of-Sale lengkap dengan inventori, laporan masa nyata.", price: "RM 1,999", featured: true },
+        { id: "tickcrm", name: "KETICK CRM", desc: "Pengurusan pelanggan, automasi follow-up & analisis jualan.", price: "RM 1,499", featured: true },
+        { id: "tickanalytics", name: "TickAnalytics", desc: "Dashboard business intelligence + AI forecasting.", price: "RM 999", featured: true },
+        { id: "tickcloud", name: "KETICK Cloud Suite", desc: "Infrastruktur pengurusan cloud untuk SME.", price: "RM 2,999", featured: true },
+        { id: "tickschool", name: "TickEdu System", desc: "Sistem pengurusan sekolah & pembelajaran digital.", price: "RM 2,499", featured: false },
+        { id: "tickcustom", name: "Custom Dev", desc: "Pembangunan sistem tempahan khas (ERP, web app, automasi).", price: "Hubungi untuk sebut harga", featured: true }
+    ];
+
+    // history command
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    // elemen
+    const outputDiv = document.getElementById("terminalOutput");
+    const inputEl = document.getElementById("terminalInput");
+    const cmdForm = document.getElementById("cmdForm");
+
+    // fungsi untuk append ke terminal output
+    function appendToTerminal(content, type = "normal") {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("output-block");
+        if (type === "error") {
+            msgDiv.classList.add("error-msg");
+        } else if (type === "success") {
+            msgDiv.classList.add("success-msg");
+        } else {
+            msgDiv.style.color = "#c3ffb2";
+        }
+        if (typeof content === "string") {
+            msgDiv.innerHTML = content; // safe kerana kita kawal string dari dalam
+        } else {
+            msgDiv.appendChild(content);
+        }
+        outputDiv.appendChild(msgDiv);
+        // auto scroll ke bawah
+        outputDiv.scrollTop = outputDiv.scrollHeight;
+    }
+
+    // append command yang ditaip
+    function appendCommand(cmdText) {
+        const cmdDiv = document.createElement("div");
+        cmdDiv.classList.add("command-history");
+        cmdDiv.innerHTML = `<span style="color:#7ecf70;">➜ ketick@system:~$</span> <span style="color:#f3ffcf;">${escapeHtml(cmdText)}</span>`;
+        outputDiv.appendChild(cmdDiv);
+        outputDiv.scrollTop = outputDiv.scrollHeight;
+    }
+
+    // helper escape html untuk keselamatan
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // papar produk (command products)
+    function showProducts() {
+        const container = document.createElement("div");
+        container.style.margin = "0.6rem 0";
+        const title = document.createElement("div");
+        title.innerHTML = "<strong>📦  SENARAI SISTEM YANG DISEDIAKAN oleh KETICK  📦</strong>";
+        title.style.marginBottom = "0.8rem";
+        title.style.color = "#e2ffc7";
+        container.appendChild(title);
+        
+        const gridDiv = document.createElement("div");
+        gridDiv.className = "product-table";
+        gridDiv.style.display = "grid";
+        gridDiv.style.gridTemplateColumns = "1fr 2fr 1fr";
+        gridDiv.style.gap = "0.5rem 1rem";
+        
+        // header
+        const headerName = document.createElement("div"); headerName.textContent = "SYSTEM"; headerName.style.fontWeight="bold"; headerName.style.color="#bbff99";
+        const headerDesc = document.createElement("div"); headerDesc.textContent = "DESCRIPTION"; headerDesc.style.fontWeight="bold";
+        const headerPrice = document.createElement("div"); headerPrice.textContent = "PRICE"; headerPrice.style.fontWeight="bold";
+        gridDiv.appendChild(headerName);
+        gridDiv.appendChild(headerDesc);
+        gridDiv.appendChild(headerPrice);
+        
+        products.forEach(prod => {
+            const nameDiv = document.createElement("div"); nameDiv.textContent = prod.name; nameDiv.style.color="#f3ffb0"; nameDiv.style.fontWeight="bold";
+            const descDiv = document.createElement("div"); descDiv.textContent = prod.desc; descDiv.style.color="#c2f0b0";
+            const priceDiv = document.createElement("div"); priceDiv.textContent = prod.price; priceDiv.style.color="#ffe3a3";
+            gridDiv.appendChild(nameDiv);
+            gridDiv.appendChild(descDiv);
+            gridDiv.appendChild(priceDiv);
+        });
+        container.appendChild(gridDiv);
+        
+        const footerNote = document.createElement("div");
+        footerNote.innerHTML = "<hr>✨ Untuk membeli sistem, gunakan: <span style='background:#1f2a1f; padding:2px 6px; border-radius:6px;'>buy [nama_produk]</span> — contoh: buy tickpos";
+        footerNote.style.marginTop = "0.8rem";
+        footerNote.style.fontSize = "0.85rem";
+        container.appendChild(footerNote);
+        appendToTerminal(container);
+    }
+
+    // command about
+    function showAbout() {
+        const aboutHtml = `
+            <div style="background:#0a1208; padding:0.7rem; border-radius:12px; border-left: 5px solid #7fe07a;">
+            <strong style="color:#c6ff9e;">⎯ KETICK ⎯</strong><br>
+            KETICK ialah rumah pembangunan sistem (coding house) yang membina perisian tersuai & menjual sistem berskala enterprise. 
+            Dari sistem retail, CRM, hingga automasi korporat — kami gabungkan kecekapan kod dengan reka bentuk futuristik. <br>
+            📍 Setiap sistem dibangunkan dengan teknologi moden (React, Laravel, Python) & sokongan sepenuh masa.<br>
+            🌐 <strong>Misi:</strong> Memperkasakan perniagaan melalui terminal & software yang mantap.
+            </div>
+        `;
+        appendToTerminal(aboutHtml);
+    }
+
+    // contact
+    function showContact() {
+        const contactMsg = `
+            <div class="success-msg" style="padding:0.5rem 0;">
+            📧 E-mel: <a href="mailto:sales@ketick.com">sales@ketick.com</a><br>
+            📞 Hotline: +60 12-345 6789 (WhatsApp Business)<br>
+            🌐 Portal: <a href="#">https://ketick.tech</a><br>
+            🐙 GitHub: @keticklabs &nbsp;| 🕊️ Twitter: @ketick_io<br>
+            💬 Untuk sebarang pertanyaan sistem atau tempahan coding, hubungi kami.
+            </div>
+        `;
+        appendToTerminal(contactMsg);
+    }
+
+    // custom dev service
+    function showCustomDev() {
+        const customHtml = `
+            <div style="border:1px solid #3c6e3c; border-radius:14px; padding:0.8rem; background:#0b130b;">
+            <span style="color:#f0ffaa;">⚙️ PERKHIDMATAN BUILD-TO-ORDER ⚙️</span><br>
+            KETICK membina sistem 100% tersuai mengikut keperluan perniagaan anda:<br>
+            • Sistem ERP / HRMS / Inventory lanjutan<br>
+            • Aplikasi web & mobile + API integration<br>
+            • Automasi aliran kerja & AI analytics<br>
+            <strong>🔥 Mulakan projek: hubungi kami dengan command 'contact' atau e-mel terus.</strong><br>
+            Harga bermula dari RM 4,500 (bergantung skop).
+            </div>
+        `;
+        appendToTerminal(customHtml);
+    }
+
+    // proses buy command
+    function processBuy(args) {
+        if (!args || args.trim() === "") {
+            appendToTerminal("⚠️ Usage: buy [product_id] — contoh: buy tickpos , buy tickcrm , buy tickanalytics", "error");
+            appendToTerminal("📋 Guna command 'products' untuk lihat senarai sistem.", "error");
+            return;
+        }
+        const target = args.trim().toLowerCase();
+        const product = products.find(p => p.id === target || p.name.toLowerCase() === target);
+        if (!product) {
+            appendToTerminal(`❌ Produk "${args}" tidak ditemui. Taip 'products' untuk senarai sistem yang sah.`, "error");
+            return;
+        }
+        // proses pembelian simulasi
+        let buyMsg = `
+            <div style="background:#0d2a0d; border-radius:16px; padding:0.7rem 1rem; margin:0.3rem 0;">
+            🧾 <strong style="color:#e9ffb4;">ORDER INITIATED</strong> — ${product.name}<br>
+            💰 Harga: ${product.price}<br>
+            📦 Penerangan: ${product.desc}<br>
+            ✅ Langkah seterusnya: Sila e-mel <strong>sales@ketick.com</strong> dengan subjek "PURCHASE: ${product.id}" dan nyatakan butiran syarikat.<br>
+            🔗 Kami akan hantar invois & pautan pembayaran dalam masa 24 jam. (Demo tersedia atas permintaan)<br>
+            ⚡ Sistem akan dihantar secara digital + pakej pemasangan.
+            </div>
+        `;
+        appendToTerminal(buyMsg, "success");
+    }
+
+    // help command
+    function showHelp() {
+        const helpText = `
+            <div style="background:#0b1009; border-radius:12px; padding:0.6rem 1rem;">
+            <strong>🖥️  KETICK TERMINAL HELP  —  arahan tersedia</strong><br>
+            <table style="width:100%; border-spacing:0 6px; margin-top:0.5rem;">
+                <tr><td style="color:#b2ff8f;">help</td><td> → Papar senarai command ini.</td></tr>
+                <tr><td style="color:#b2ff8f;">products / list</td><td> → Senarai sistem yang dijual oleh KETICK.</td></tr>
+                <tr><td style="color:#b2ff8f;">buy [id/nama]</td><td> → Beli sistem. Contoh: buy tickpos , buy TickPOS Pro</td></tr>
+                <tr><td style="color:#b2ff8f;">about</td><td> → Maklumat syarikat KETICK & visi coding.</td></tr>
+                <tr><td style="color:#b2ff8f;">contact</td><td> → Hubungi pasukan jualan / sokongan.</td></tr>
+                <tr><td style="color:#b2ff8f;">custom / dev</td><td> → Perkhidmatan pembangunan sistem tempahan khas.</td></tr>
+                <tr><td style="color:#b2ff8f;">clear</td><td> → Bersihkan skrin terminal.</td></tr>
+            </table>
+            <hr style="border-color:#2c482c;">
+            <i>💡 Petua: KETICK juga membina sistem dari awal (coding) — command 'custom' untuk maklumat lanjut.</i>
+            </div>
+        `;
+        appendToTerminal(helpText);
+    }
+
+    // fungsi clear output
+    function clearTerminal() {
+        while (outputDiv.firstChild) {
+            outputDiv.removeChild(outputDiv.firstChild);
+        }
+        // tambah banner minimal selepas clear (rasa seperti terminal bersih)
+        const cleanBanner = document.createElement("div");
+        cleanBanner.className = "output-block";
+        cleanBanner.innerHTML = `<span style="color:#6eae5a;">✦ terminal cleared ✦   ketick@system ready.</span><br>`;
+        outputDiv.appendChild(cleanBanner);
+    }
+
+    // main command processor
+    function handleCommand(rawCmd) {
+        const cmd = rawCmd.trim().toLowerCase();
+        if (cmd === "") return;
+
+        // split untuk argumen
+        const parts = rawCmd.trim().split(/\s+/);
+        const mainCmd = parts[0].toLowerCase();
+        const args = parts.slice(1).join(" ");
+
+        // routing command
+        switch (mainCmd) {
+            case "help":
+                showHelp();
+                break;
+            case "products":
+            case "list":
+                showProducts();
+                break;
+            case "buy":
+                processBuy(args);
+                break;
+            case "about":
+                showAbout();
+                break;
+            case "contact":
+                showContact();
+                break;
+            case "custom":
+            case "dev":
+                showCustomDev();
+                break;
+            case "clear":
+                clearTerminal();
+                break;
+            default:
+                appendToTerminal(`Command tidak dikenali: "${escapeHtml(rawCmd)}". Taip 'help' untuk senarai arahan.`, "error");
+        }
+    }
+
+    // fungsi untuk memproses input user dari form
+    function onCommandSubmit(e) {
+        e.preventDefault();
+        const cmdText = inputEl.value;
+        if (cmdText === "") {
+            inputEl.value = "";
+            inputEl.focus();
+            return;
+        }
+        // simpan ke history
+        commandHistory.push(cmdText);
+        historyIndex = commandHistory.length;
+        // display command
+        appendCommand(cmdText);
+        // process
+        handleCommand(cmdText);
+        // clear input
+        inputEl.value = "";
+        inputEl.focus();
+    }
+
+    // history navigation
+    function handleHistoryKey(e) {
+        if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (commandHistory.length === 0) return;
+            if (historyIndex > 0) {
+                historyIndex--;
+            } else if (historyIndex === 0) {
+                // stay on first
+            } else {
+                historyIndex = commandHistory.length - 1;
+            }
+            if (historyIndex >= 0 && historyIndex < commandHistory.length) {
+                inputEl.value = commandHistory[historyIndex];
+            } else {
+                inputEl.value = "";
+            }
+        } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (commandHistory.length === 0) return;
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                inputEl.value = commandHistory[historyIndex];
+            } else {
+                historyIndex = commandHistory.length;
+                inputEl.value = "";
+            }
+        }
+    }
+
+    // tampilan sambutan / welcome message
+    function initWelcome() {
+        const ascii = `
+        ╔════════════════════════════════════════════════════╗
+        ║  ██╗  ██╗███████╗████████╗██╗ ██████╗██╗  ██╗     ║
+        ║  ██║ ██╔╝██╔════╝╚══██╔══╝██║██╔════╝██║ ██╔╝     ║
+        ║  █████╔╝ █████╗     ██║   ██║██║     █████╔╝      ║
+        ║  ██╔═██╗ ██╔══╝     ██║   ██║██║     ██╔═██╗      ║
+        ║  ██║  ██╗███████╗   ██║   ██║╚██████╗██║  ██╗     ║
+        ║  ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝ ╚═════╝╚═╝  ╚═╝     ║
+        ╚════════════════════════════════════════════════════╝
+        `;
+        const welcomeDiv = document.createElement("div");
+        welcomeDiv.className = "output-block";
+        welcomeDiv.style.whiteSpace = "pre";
+        welcomeDiv.style.fontSize = "0.7rem";
+        welcomeDiv.style.lineHeight = "1.2";
+        welcomeDiv.style.color = "#9bdb86";
+        welcomeDiv.innerHTML = ascii;
+        outputDiv.appendChild(welcomeDiv);
+        
+        const intro = document.createElement("div");
+        intro.className = "output-block";
+        intro.innerHTML = `
+            <div style="border-left: 4px solid #6bc46b; padding-left: 12px; margin: 10px 0 6px;">
+            ✨ <strong>KETICK TERMINAL PLATFORM</strong> ✨<br>
+            • Kami membina & menjual sistem perniagaan moden.<br>
+            • Gunakan command <span style="background:#1e2a1e; padding:0 6px;">help</span> untuk terokai produk, harga, dan perkhidmatan coding.<br>
+            • Sistem boleh dibeli terus melalui terminal ini — <strong>taip 'products'</strong> untuk melihat katalog.<br>
+            🧬 <em>"Code. Deploy. Dominate."</em>
+            </div>
+        `;
+        outputDiv.appendChild(intro);
+        const promptHint = document.createElement("div");
+        promptHint.className = "output-block";
+        promptHint.style.marginTop = "8px";
+        promptHint.innerHTML = `💻 ➜ Taip arahan anda di bawah. Contoh: products , buy tickpos , about`;
+        outputDiv.appendChild(promptHint);
+        outputDiv.scrollTop = outputDiv.scrollHeight;
+    }
+
+    // event listener untuk form & input
+    cmdForm.addEventListener("submit", onCommandSubmit);
+    inputEl.addEventListener("keydown", handleHistoryKey);
+    // fokus sentiasa
+    inputEl.addEventListener("click", () => inputEl.focus());
+    document.body.addEventListener("click", () => inputEl.focus());
+
+    // muat turun awal
+    initWelcome();
+</script>
+</body>
+</html>
