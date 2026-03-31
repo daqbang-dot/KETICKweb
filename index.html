@@ -21,7 +21,6 @@
             padding: 2rem;
         }
 
-        /* Terminal utama – rupa macOS */
         .terminal {
             max-width: 1300px;
             width: 100%;
@@ -30,11 +29,9 @@
             border-radius: 1.2rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
             overflow: hidden;
-            transition: all 0.2s ease;
             border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
-        /* Header macam Terminal.app */
         .terminal-header {
             background: rgba(38, 40, 46, 0.9);
             padding: 0.7rem 1.2rem;
@@ -44,7 +41,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Butang trafik macOS */
         .win-dots {
             display: flex;
             gap: 0.55rem;
@@ -54,7 +50,6 @@
             width: 13px;
             height: 13px;
             border-radius: 50%;
-            transition: all 0.15s;
             box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
         }
         .dot.red { background: #ff5f57; border: 1px solid #e0443c; }
@@ -64,7 +59,6 @@
         .terminal-title {
             color: #e2e4e8;
             font-size: 0.8rem;
-            letter-spacing: 0.3px;
             font-weight: 500;
             background: rgba(55, 58, 66, 0.7);
             padding: 0.2rem 0.9rem;
@@ -75,10 +69,8 @@
         .terminal-title i {
             font-style: normal;
             color: #5fcb5c;
-            font-weight: 500;
         }
 
-        /* Kawasan output dengan font nyaman */
         .terminal-output {
             background: #1c1e24;
             padding: 1.4rem 1.4rem;
@@ -99,7 +91,6 @@
             border-radius: 10px;
         }
 
-        /* Baris command ala zsh */
         .cmd-line {
             display: flex;
             align-items: baseline;
@@ -115,9 +106,6 @@
             font-size: 0.95rem;
             white-space: nowrap;
             font-family: monospace;
-        }
-        .prompt span:first-child {
-            color: #78d96e;
         }
         .prompt .path {
             color: #8d96b0;
@@ -135,11 +123,9 @@
         }
         .input-field::placeholder {
             color: #5a5e72;
-            font-style: normal;
             font-size: 0.85rem;
         }
 
-        /* Footer minimal */
         .terminal-footer {
             background: rgba(26, 28, 34, 0.9);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -149,11 +135,8 @@
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            font-family: monospace;
-            letter-spacing: 0.2px;
         }
 
-        /* output styling - clean modern */
         .output-block {
             margin: 0.2rem 0 0.5rem 0;
             white-space: pre-wrap;
@@ -191,52 +174,18 @@
             padding: 0.8rem;
             border-radius: 14px;
             border: 1px solid rgba(95, 203, 92, 0.2);
-            backdrop-filter: blur(2px);
         }
-        .prod-name {
-            font-weight: 600;
-            color: #e6ffdb;
-        }
-        .prod-desc {
-            color: #bcc4dc;
-        }
-        .prod-price {
-            color: #ffdfa5;
-        }
-        hr {
-            border-color: rgba(95, 203, 92, 0.3);
-            margin: 0.6rem 0;
-        }
-        .ascii-banner {
-            color: #8fdd88;
-            font-size: 0.65rem;
-            line-height: 1.2;
-            white-space: pre;
-            margin-bottom: 0.6rem;
-        }
-        a {
-            color: #90f07c;
-            text-decoration: none;
-            border-bottom: 1px dashed #6ea65e;
-        }
-        a:hover {
-            color: #c2ffae;
-        }
+        .prod-name { font-weight: 600; color: #e6ffdb; }
+        .prod-desc { color: #bcc4dc; }
+        .prod-price { color: #ffdfa5; }
+        hr { border-color: rgba(95, 203, 92, 0.3); margin: 0.6rem 0; }
+        a { color: #90f07c; text-decoration: none; border-bottom: 1px dashed #6ea65e; }
+        a:hover { color: #c2ffae; }
         @media (max-width: 680px) {
-            body {
-                padding: 1rem;
-            }
-            .terminal-output {
-                padding: 1rem;
-                font-size: 0.85rem;
-            }
-            .product-table {
-                grid-template-columns: 1fr;
-                gap: 0.4rem;
-            }
-            .prompt {
-                font-size: 0.85rem;
-            }
+            body { padding: 1rem; }
+            .terminal-output { padding: 1rem; font-size: 0.85rem; }
+            .product-table { grid-template-columns: 1fr; gap: 0.4rem; }
+            .prompt { font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -254,10 +203,7 @@
         </div>
     </div>
 
-    <div class="terminal-output" id="terminalOutput">
-        <!-- output akan diisi oleh JS -->
-        <div class="output-block welcome-msg"></div>
-    </div>
+    <div class="terminal-output" id="terminalOutput"></div>
 
     <div class="cmd-line" id="cmdForm">
         <div class="prompt">
@@ -273,291 +219,232 @@
 </div>
 
 <script>
-    // ----- DATA PRODUK (Sistem yang dijual & dibina oleh KETICK) -----
-    const products = [
-        { id: "tickpos", name: "TickPOS Pro", desc: "Sistem Point-of-Sale lengkap dengan inventori, laporan masa nyata.", price: "RM 1,999", featured: true },
-        { id: "tickcrm", name: "KETICK CRM", desc: "Pengurusan pelanggan, automasi follow-up & analisis jualan.", price: "RM 1,499", featured: true },
-        { id: "tickanalytics", name: "TickAnalytics", desc: "Dashboard business intelligence + AI forecasting.", price: "RM 999", featured: true },
-        { id: "tickcloud", name: "KETICK Cloud Suite", desc: "Infrastruktur pengurusan cloud untuk SME.", price: "RM 2,999", featured: true },
-        { id: "tickschool", name: "TickEdu System", desc: "Sistem pengurusan sekolah & pembelajaran digital.", price: "RM 2,499", featured: false },
-        { id: "tickcustom", name: "Custom Dev", desc: "Pembangunan sistem tempahan khas (ERP, web app, automasi).", price: "Hubungi untuk sebut harga", featured: true }
-    ];
+    (function() {
+        // ----- DATA PRODUK -----
+        const products = [
+            { id: "tickpos", name: "TickPOS Pro", desc: "Sistem Point-of-Sale lengkap dengan inventori, laporan masa nyata.", price: "RM 1,999" },
+            { id: "tickcrm", name: "KETICK CRM", desc: "Pengurusan pelanggan, automasi follow-up & analisis jualan.", price: "RM 1,499" },
+            { id: "tickanalytics", name: "TickAnalytics", desc: "Dashboard business intelligence + AI forecasting.", price: "RM 999" },
+            { id: "tickcloud", name: "KETICK Cloud Suite", desc: "Infrastruktur pengurusan cloud untuk SME.", price: "RM 2,999" },
+            { id: "tickschool", name: "TickEdu System", desc: "Sistem pengurusan sekolah & pembelajaran digital.", price: "RM 2,499" },
+            { id: "tickcustom", name: "Custom Dev", desc: "Pembangunan sistem tempahan khas (ERP, web app, automasi).", price: "Hubungi untuk sebut harga" }
+        ];
 
-    // history command
-    let commandHistory = [];
-    let historyIndex = -1;
+        let commandHistory = [];
+        let historyIndex = -1;
 
-    // elemen
-    const outputDiv = document.getElementById("terminalOutput");
-    const inputEl = document.getElementById("terminalInput");
-    const cmdForm = document.getElementById("cmdForm");
+        const outputDiv = document.getElementById("terminalOutput");
+        const inputEl = document.getElementById("terminalInput");
+        const cmdForm = document.getElementById("cmdForm");
 
-    // fungsi untuk append ke terminal output
-    function appendToTerminal(content, type = "normal") {
-        const msgDiv = document.createElement("div");
-        msgDiv.classList.add("output-block");
-        if (type === "error") {
-            msgDiv.classList.add("error-msg");
-        } else if (type === "success") {
-            msgDiv.classList.add("success-msg");
-        } else {
-            msgDiv.style.color = "#dddfe6";
-        }
-        if (typeof content === "string") {
-            msgDiv.innerHTML = content;
-        } else {
-            msgDiv.appendChild(content);
-        }
-        outputDiv.appendChild(msgDiv);
-        outputDiv.scrollTop = outputDiv.scrollHeight;
-    }
-
-    // append command yang ditaip
-    function appendCommand(cmdText) {
-        const cmdDiv = document.createElement("div");
-        cmdDiv.classList.add("command-history");
-        cmdDiv.innerHTML = `<span>➜ ketick@MacBook ~ %</span> <span style="color:#f0f3fc;">${escapeHtml(cmdText)}</span>`;
-        outputDiv.appendChild(cmdDiv);
-        outputDiv.scrollTop = outputDiv.scrollHeight;
-    }
-
-    // helper escape html
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    // papar produk (command products)
-    function showProducts() {
-        const container = document.createElement("div");
-        container.style.margin = "0.6rem 0";
-        const title = document.createElement("div");
-        title.innerHTML = "<strong>📦  KATALOG SISTEM KETICK  📦</strong>";
-        title.style.marginBottom = "0.8rem";
-        title.style.color = "#e5ffcf";
-        title.style.fontWeight = "500";
-        container.appendChild(title);
-        
-        const gridDiv = document.createElement("div");
-        gridDiv.className = "product-table";
-        
-        // header
-        const headerName = document.createElement("div"); headerName.textContent = "SYSTEM"; headerName.style.fontWeight="600"; headerName.style.color="#bbff99";
-        const headerDesc = document.createElement("div"); headerDesc.textContent = "DESCRIPTION"; headerDesc.style.fontWeight="600";
-        const headerPrice = document.createElement("div"); headerPrice.textContent = "PRICE"; headerPrice.style.fontWeight="600";
-        gridDiv.appendChild(headerName);
-        gridDiv.appendChild(headerDesc);
-        gridDiv.appendChild(headerPrice);
-        
-        products.forEach(prod => {
-            const nameDiv = document.createElement("div"); nameDiv.textContent = prod.name; nameDiv.style.color="#f0ffd6"; nameDiv.style.fontWeight="500";
-            const descDiv = document.createElement("div"); descDiv.textContent = prod.desc; descDiv.style.color="#cbd5f0";
-            const priceDiv = document.createElement("div"); priceDiv.textContent = prod.price; priceDiv.style.color="#ffe2a4";
-            gridDiv.appendChild(nameDiv);
-            gridDiv.appendChild(descDiv);
-            gridDiv.appendChild(priceDiv);
-        });
-        container.appendChild(gridDiv);
-        
-        const footerNote = document.createElement("div");
-        footerNote.innerHTML = "<hr>✨ Beli sistem: <code style='background:#2f323c; padding:2px 8px; border-radius:20px;'>buy [nama_produk]</code> — contoh: buy tickpos atau buy 'TickPOS Pro'";
-        footerNote.style.marginTop = "0.8rem";
-        footerNote.style.fontSize = "0.85rem";
-        container.appendChild(footerNote);
-        appendToTerminal(container);
-    }
-
-    // command about
-    function showAbout() {
-        const aboutHtml = `
-            <div style="background:rgba(40, 44, 55, 0.6); padding:0.8rem; border-radius:16px; border-left: 4px solid #5fcb5c;">
-            <strong style="color:#d0ffbe;">⎯ KETICK — coding studio ⎯</strong><br>
-            KETICK ialah rumah pembangunan sistem (coding house) yang membina perisian tersuai & menjual sistem berskala enterprise. 
-            Dari sistem retail, CRM, automasi korporat — kami gabungkan kecekapan kod dengan reka bentuk futuristik. <br>
-            📍 Setiap sistem dibangunkan dengan teknologi moden (React, Laravel, Python) & sokongan sepenuh masa.<br>
-            🌐 <strong>Misi:</strong> Memperkasakan perniagaan melalui terminal & software yang mantap.
-            </div>
-        `;
-        appendToTerminal(aboutHtml);
-    }
-
-    // contact
-    function showContact() {
-        const contactMsg = `
-            <div class="success-msg" style="padding:0.5rem 0;">
-            📧 E-mel: <a href="mailto:sales@ketick.com">sales@ketick.com</a><br>
-            📞 Hotline: +60 12-345 6789 (WhatsApp Business)<br>
-            🌐 Portal: <a href="#">https://ketick.tech</a><br>
-            🐙 GitHub: @keticklabs &nbsp;| 🕊️ Twitter: @ketick_io<br>
-            💬 Untuk sebarang pertanyaan sistem atau tempahan coding, hubungi kami.
-            </div>
-        `;
-        appendToTerminal(contactMsg);
-    }
-
-    // custom dev service
-    function showCustomDev() {
-        const customHtml = `
-            <div style="border:1px solid #5fcb5c55; border-radius:18px; padding:0.8rem; background:rgba(30, 35, 45, 0.7);">
-            <span style="color:#e2ffbc;">⚙️ PERKHIDMATAN BUILD-TO-ORDER ⚙️</span><br>
-            KETICK membina sistem 100% tersuai mengikut keperluan perniagaan anda:<br>
-            • Sistem ERP / HRMS / Inventory lanjutan<br>
-            • Aplikasi web & mobile + API integration<br>
-            • Automasi aliran kerja & AI analytics<br>
-            <strong>🔥 Mulakan projek: hubungi kami dengan command 'contact' atau e-mel terus.</strong><br>
-            Harga bermula dari RM 4,500 (bergantung skop).
-            </div>
-        `;
-        appendToTerminal(customHtml);
-    }
-
-    // proses buy command
-    function processBuy(args) {
-        if (!args || args.trim() === "") {
-            appendToTerminal("⚠️ Usage: buy [product_id] — contoh: buy tickpos , buy tickcrm , buy tickanalytics", "error");
-            appendToTerminal("📋 Guna command 'products' untuk lihat senarai sistem.", "error");
+        if (!outputDiv || !inputEl || !cmdForm) {
+            console.error("Terminal elements missing!");
             return;
         }
-        const target = args.trim().toLowerCase();
-        const product = products.find(p => p.id === target || p.name.toLowerCase() === target);
-        if (!product) {
-            appendToTerminal(`❌ Produk "${args}" tidak ditemui. Taip 'products' untuk senarai sistem yang sah.`, "error");
-            return;
+
+        // Helper functions
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
         }
-        let buyMsg = `
-            <div style="background:rgba(30, 48, 30, 0.5); border-radius:20px; padding:0.7rem 1rem; margin:0.3rem 0; border:1px solid #5fcb5c55;">
-            🧾 <strong style="color:#e9ffb4;">ORDER INITIATED</strong> — ${product.name}<br>
-            💰 Harga: ${product.price}<br>
-            📦 Penerangan: ${product.desc}<br>
-            ✅ Langkah seterusnya: Sila e-mel <strong>sales@ketick.com</strong> dengan subjek "PURCHASE: ${product.id}" dan nyatakan butiran syarikat.<br>
-            🔗 Kami akan hantar invois & pautan pembayaran dalam masa 24 jam. (Demo tersedia atas permintaan)<br>
-            ⚡ Sistem akan dihantar secara digital + pakej pemasangan.
-            </div>
-        `;
-        appendToTerminal(buyMsg, "success");
-    }
 
-    // help command
-    function showHelp() {
-        const helpText = `
-            <div style="background:rgba(35, 38, 48, 0.7); border-radius:18px; padding:0.7rem 1rem;">
-            <strong>🖥️  KETICK TERMINAL HELP  —  arahan tersedia</strong><br>
-            <table style="width:100%; border-spacing:0 8px; margin-top:0.5rem;">
-                <tr><td style="color:#b2ff8f;">help</td><td style="color:#bdc3db;">→ Papar senarai command ini.</td></tr>
-                <tr><td style="color:#b2ff8f;">products / list</td><td style="color:#bdc3db;">→ Senarai sistem yang dijual oleh KETICK.</td></tr>
-                <tr><td style="color:#b2ff8f;">buy [id/nama]</td><td style="color:#bdc3db;">→ Beli sistem. Contoh: buy tickpos , buy TickPOS Pro</td></tr>
-                <tr><td style="color:#b2ff8f;">about</td><td style="color:#bdc3db;">→ Maklumat syarikat KETICK & visi coding.</td></tr>
-                <tr><td style="color:#b2ff8f;">contact</td><td style="color:#bdc3db;">→ Hubungi pasukan jualan / sokongan.</td></tr>
-                <tr><td style="color:#b2ff8f;">custom / dev</td><td style="color:#bdc3db;">→ Perkhidmatan pembangunan sistem tempahan khas.</td></tr>
-                <tr><td style="color:#b2ff8f;">clear</td><td style="color:#bdc3db;">→ Bersihkan skrin terminal.</td></tr>
-            </table>
-            <hr style="border-color:#3a4050;">
-            <i>💡 Petua: KETICK juga membina sistem dari awal (coding) — command 'custom' untuk maklumat lanjut.</i>
-            </div>
-        `;
-        appendToTerminal(helpText);
-    }
-
-    // clear output
-    function clearTerminal() {
-        while (outputDiv.firstChild) {
-            outputDiv.removeChild(outputDiv.firstChild);
+        function appendToTerminal(content, type = "normal") {
+            const msgDiv = document.createElement("div");
+            msgDiv.classList.add("output-block");
+            if (type === "error") msgDiv.classList.add("error-msg");
+            else if (type === "success") msgDiv.classList.add("success-msg");
+            if (typeof content === "string") msgDiv.innerHTML = content;
+            else msgDiv.appendChild(content);
+            outputDiv.appendChild(msgDiv);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
         }
-        const cleanBanner = document.createElement("div");
-        cleanBanner.className = "output-block";
-        cleanBanner.innerHTML = `<span style="color:#7dcc78;">✦ terminal cleared ✦   ketick@system ready.</span><br>`;
-        outputDiv.appendChild(cleanBanner);
-    }
 
-    // main command processor
-    function handleCommand(rawCmd) {
-        const cmd = rawCmd.trim().toLowerCase();
-        if (cmd === "") return;
-
-        const parts = rawCmd.trim().split(/\s+/);
-        const mainCmd = parts[0].toLowerCase();
-        const args = parts.slice(1).join(" ");
-
-        switch (mainCmd) {
-            case "help":
-                showHelp();
-                break;
-            case "products":
-            case "list":
-                showProducts();
-                break;
-            case "buy":
-                processBuy(args);
-                break;
-            case "about":
-                showAbout();
-                break;
-            case "contact":
-                showContact();
-                break;
-            case "custom":
-            case "dev":
-                showCustomDev();
-                break;
-            case "clear":
-                clearTerminal();
-                break;
-            default:
-                appendToTerminal(`Command tidak dikenali: "${escapeHtml(rawCmd)}". Taip 'help' untuk senarai arahan.`, "error");
+        function appendCommand(cmdText) {
+            const cmdDiv = document.createElement("div");
+            cmdDiv.classList.add("command-history");
+            cmdDiv.innerHTML = `<span>➜ ketick@MacBook ~ %</span> <span style="color:#f0f3fc;">${escapeHtml(cmdText)}</span>`;
+            outputDiv.appendChild(cmdDiv);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
         }
-    }
 
-    function onCommandSubmit(e) {
-        e.preventDefault();
-        const cmdText = inputEl.value;
-        if (cmdText === "") {
+        function showProducts() {
+            const container = document.createElement("div");
+            container.innerHTML = `<strong>📦  KATALOG SISTEM KETICK  📦</strong>`;
+            const grid = document.createElement("div");
+            grid.className = "product-table";
+            // headers
+            grid.innerHTML = `
+                <div style="font-weight:600;color:#bbff99;">SYSTEM</div>
+                <div style="font-weight:600;">DESCRIPTION</div>
+                <div style="font-weight:600;">PRICE</div>
+            `;
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div style="color:#f0ffd6;font-weight:500;">${escapeHtml(p.name)}</div>
+                    <div style="color:#cbd5f0;">${escapeHtml(p.desc)}</div>
+                    <div style="color:#ffe2a4;">${escapeHtml(p.price)}</div>
+                `;
+            });
+            container.appendChild(grid);
+            const footer = document.createElement("div");
+            footer.innerHTML = `<hr>✨ Beli sistem: <code style="background:#2f323c;padding:2px 8px;border-radius:20px;">buy [nama_produk]</code> — contoh: buy tickpos`;
+            footer.style.marginTop = "0.8rem";
+            footer.style.fontSize = "0.85rem";
+            container.appendChild(footer);
+            appendToTerminal(container);
+        }
+
+        function showAbout() {
+            appendToTerminal(`
+                <div style="background:rgba(40,44,55,0.6);padding:0.8rem;border-radius:16px;border-left:4px solid #5fcb5c;">
+                <strong style="color:#d0ffbe;">⎯ KETICK — coding studio ⎯</strong><br>
+                KETICK ialah rumah pembangunan sistem (coding house) yang membina perisian tersuai & menjual sistem berskala enterprise. 
+                Dari sistem retail, CRM, automasi korporat — kami gabungkan kecekapan kod dengan reka bentuk futuristik. <br>
+                📍 Setiap sistem dibangunkan dengan teknologi moden (React, Laravel, Python) & sokongan sepenuh masa.<br>
+                🌐 <strong>Misi:</strong> Memperkasakan perniagaan melalui terminal & software yang mantap.
+                </div>
+            `);
+        }
+
+        function showContact() {
+            appendToTerminal(`
+                <div class="success-msg" style="padding:0.5rem 0;">
+                📧 E-mel: <a href="mailto:sales@ketick.com">sales@ketick.com</a><br>
+                📞 Hotline: +60 12-345 6789 (WhatsApp Business)<br>
+                🌐 Portal: <a href="#">https://ketick.tech</a><br>
+                🐙 GitHub: @keticklabs &nbsp;| 🕊️ Twitter: @ketick_io<br>
+                💬 Untuk sebarang pertanyaan sistem atau tempahan coding, hubungi kami.
+                </div>
+            `);
+        }
+
+        function showCustomDev() {
+            appendToTerminal(`
+                <div style="border:1px solid #5fcb5c55;border-radius:18px;padding:0.8rem;background:rgba(30,35,45,0.7);">
+                <span style="color:#e2ffbc;">⚙️ PERKHIDMATAN BUILD-TO-ORDER ⚙️</span><br>
+                KETICK membina sistem 100% tersuai mengikut keperluan perniagaan anda:<br>
+                • Sistem ERP / HRMS / Inventory lanjutan<br>
+                • Aplikasi web & mobile + API integration<br>
+                • Automasi aliran kerja & AI analytics<br>
+                <strong>🔥 Mulakan projek: hubungi kami dengan command 'contact' atau e-mel terus.</strong><br>
+                Harga bermula dari RM 4,500 (bergantung skop).
+                </div>
+            `);
+        }
+
+        function processBuy(args) {
+            if (!args || args.trim() === "") {
+                appendToTerminal("⚠️ Usage: buy [product_id] — contoh: buy tickpos , buy tickcrm", "error");
+                return;
+            }
+            const target = args.trim().toLowerCase();
+            const product = products.find(p => p.id === target || p.name.toLowerCase() === target);
+            if (!product) {
+                appendToTerminal(`❌ Produk "${args}" tidak ditemui. Taip 'products' untuk senarai sistem.`, "error");
+                return;
+            }
+            appendToTerminal(`
+                <div style="background:rgba(30,48,30,0.5);border-radius:20px;padding:0.7rem 1rem;border:1px solid #5fcb5c55;">
+                🧾 <strong style="color:#e9ffb4;">ORDER INITIATED</strong> — ${product.name}<br>
+                💰 Harga: ${product.price}<br>
+                📦 Penerangan: ${product.desc}<br>
+                ✅ Langkah seterusnya: Sila e-mel <strong>sales@ketick.com</strong> dengan subjek "PURCHASE: ${product.id}" dan nyatakan butiran syarikat.<br>
+                🔗 Kami akan hantar invois & pautan pembayaran dalam masa 24 jam.<br>
+                ⚡ Sistem akan dihantar secara digital + pakej pemasangan.
+                </div>
+            `, "success");
+        }
+
+        function showHelp() {
+            appendToTerminal(`
+                <div style="background:rgba(35,38,48,0.7);border-radius:18px;padding:0.7rem 1rem;">
+                <strong>🖥️  KETICK TERMINAL HELP  —  arahan tersedia</strong><br>
+                <table style="width:100%;border-spacing:0 8px;margin-top:0.5rem;">
+                    <tr><td style="color:#b2ff8f;">help</td><td style="color:#bdc3db;">→ Papar senarai command ini.</td></tr>
+                    <tr><td style="color:#b2ff8f;">products / list</td><td style="color:#bdc3db;">→ Senarai sistem yang dijual.</td></tr>
+                    <tr><td style="color:#b2ff8f;">buy [id/nama]</td><td style="color:#bdc3db;">→ Beli sistem. Contoh: buy tickpos</td></tr>
+                    <tr><td style="color:#b2ff8f;">about</td><td style="color:#bdc3db;">→ Maklumat syarikat KETICK.</td></tr>
+                    <tr><td style="color:#b2ff8f;">contact</td><td style="color:#bdc3db;">→ Hubungi pasukan jualan.</td></tr>
+                    <tr><td style="color:#b2ff8f;">custom / dev</td><td style="color:#bdc3db;">→ Perkhidmatan pembangunan sistem tempahan.</td></tr>
+                    <tr><td style="color:#b2ff8f;">clear</td><td style="color:#bdc3db;">→ Bersihkan skrin terminal.</td></tr>
+                </table>
+                <hr style="border-color:#3a4050;">
+                <i>💡 Petua: KETICK juga membina sistem dari awal (coding) — command 'custom' untuk maklumat lanjut.</i>
+                </div>
+            `);
+        }
+
+        function clearTerminal() {
+            while (outputDiv.firstChild) outputDiv.removeChild(outputDiv.firstChild);
+            const clean = document.createElement("div");
+            clean.className = "output-block";
+            clean.innerHTML = `<span style="color:#7dcc78;">✦ terminal cleared ✦   ketick@system ready.</span><br>`;
+            outputDiv.appendChild(clean);
+        }
+
+        function handleCommand(rawCmd) {
+            const cmd = rawCmd.trim().toLowerCase();
+            if (cmd === "") return;
+
+            const parts = rawCmd.trim().split(/\s+/);
+            const mainCmd = parts[0].toLowerCase();
+            const args = parts.slice(1).join(" ");
+
+            switch (mainCmd) {
+                case "help": showHelp(); break;
+                case "products": case "list": showProducts(); break;
+                case "buy": processBuy(args); break;
+                case "about": showAbout(); break;
+                case "contact": showContact(); break;
+                case "custom": case "dev": showCustomDev(); break;
+                case "clear": clearTerminal(); break;
+                default:
+                    appendToTerminal(`Command tidak dikenali: "${escapeHtml(rawCmd)}". Taip 'help' untuk senarai arahan.`, "error");
+            }
+        }
+
+        function onCommandSubmit(e) {
+            e.preventDefault();
+            const cmdText = inputEl.value;
+            if (cmdText === "") {
+                inputEl.focus();
+                return;
+            }
+            commandHistory.push(cmdText);
+            historyIndex = commandHistory.length;
+            appendCommand(cmdText);
+            handleCommand(cmdText);
+            inputEl.value = "";
             inputEl.focus();
-            return;
         }
-        commandHistory.push(cmdText);
-        historyIndex = commandHistory.length;
-        appendCommand(cmdText);
-        handleCommand(cmdText);
-        inputEl.value = "";
-        inputEl.focus();
-    }
 
-    function handleHistoryKey(e) {
-        if (e.key === "ArrowUp") {
-            e.preventDefault();
-            if (commandHistory.length === 0) return;
-            if (historyIndex > 0) {
-                historyIndex--;
-            } else if (historyIndex === 0) {
-                // stay
-            } else {
-                historyIndex = commandHistory.length - 1;
-            }
-            if (historyIndex >= 0 && historyIndex < commandHistory.length) {
-                inputEl.value = commandHistory[historyIndex];
-            } else {
-                inputEl.value = "";
-            }
-        } else if (e.key === "ArrowDown") {
-            e.preventDefault();
-            if (commandHistory.length === 0) return;
-            if (historyIndex < commandHistory.length - 1) {
-                historyIndex++;
-                inputEl.value = commandHistory[historyIndex];
-            } else {
-                historyIndex = commandHistory.length;
-                inputEl.value = "";
+        function handleHistoryKey(e) {
+            if (e.key === "ArrowUp") {
+                e.preventDefault();
+                if (commandHistory.length === 0) return;
+                if (historyIndex > 0) historyIndex--;
+                else if (historyIndex === 0) { /* stay */ }
+                else historyIndex = commandHistory.length - 1;
+                inputEl.value = (historyIndex >= 0 && historyIndex < commandHistory.length) ? commandHistory[historyIndex] : "";
+            } else if (e.key === "ArrowDown") {
+                e.preventDefault();
+                if (commandHistory.length === 0) return;
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    inputEl.value = commandHistory[historyIndex];
+                } else {
+                    historyIndex = commandHistory.length;
+                    inputEl.value = "";
+                }
             }
         }
-    }
 
-    // sambutan dengan elegan
-    function initWelcome() {
-        const ascii = `
+        function initWelcome() {
+            const ascii = `
         ╔════════════════════════════════════════════════════════╗
         ║   ██╗  ██╗███████╗████████╗██╗ ██████╗██╗  ██╗        ║
         ║   ██║ ██╔╝██╔════╝╚══██╔══╝██║██╔════╝██║ ██╔╝        ║
@@ -566,43 +453,34 @@
         ║   ██║  ██╗███████╗   ██║   ██║╚██████╗██║  ██╗        ║
         ║   ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝ ╚═════╝╚═╝  ╚═╝        ║
         ╚════════════════════════════════════════════════════════╝
-        `;
-        const welcomeDiv = document.createElement("div");
-        welcomeDiv.className = "output-block";
-        welcomeDiv.style.whiteSpace = "pre";
-        welcomeDiv.style.fontSize = "0.7rem";
-        welcomeDiv.style.lineHeight = "1.2";
-        welcomeDiv.style.color = "#9bdb86";
-        welcomeDiv.style.opacity = "0.9";
-        welcomeDiv.innerHTML = ascii;
-        outputDiv.appendChild(welcomeDiv);
-        
-        const intro = document.createElement("div");
-        intro.className = "output-block";
-        intro.innerHTML = `
-            <div style="border-left: 4px solid #5fcb5c; padding-left: 14px; margin: 12px 0 8px;">
-            ✨ <strong>KETICK TERMINAL PLATFORM</strong> ✨<br>
-            • Kami membina & menjual sistem perniagaan moden.<br>
-            • Gunakan command <span style="background:#2a2e3a; padding:0 6px; border-radius:12px;">help</span> untuk terokai produk, harga, dan perkhidmatan coding.<br>
-            • Sistem boleh dibeli terus melalui terminal ini — <strong>taip 'products'</strong> untuk melihat katalog.<br>
-            🧬 <em>"Code. Deploy. Dominate."</em>
-            </div>
-        `;
-        outputDiv.appendChild(intro);
-        const promptHint = document.createElement("div");
-        promptHint.className = "output-block";
-        promptHint.style.marginTop = "6px";
-        promptHint.innerHTML = `💻 ➜ Taip arahan di bawah. Contoh: products , buy tickpos , about`;
-        outputDiv.appendChild(promptHint);
-        outputDiv.scrollTop = outputDiv.scrollHeight;
-    }
+            `;
+            const welcomeDiv = document.createElement("div");
+            welcomeDiv.className = "output-block";
+            welcomeDiv.style.whiteSpace = "pre";
+            welcomeDiv.style.fontSize = "0.7rem";
+            welcomeDiv.style.lineHeight = "1.2";
+            welcomeDiv.style.color = "#9bdb86";
+            welcomeDiv.innerHTML = ascii;
+            outputDiv.appendChild(welcomeDiv);
+            
+            appendToTerminal(`
+                <div style="border-left: 4px solid #5fcb5c; padding-left: 14px; margin: 12px 0 8px;">
+                ✨ <strong>KETICK TERMINAL PLATFORM</strong> ✨<br>
+                • Kami membina & menjual sistem perniagaan moden.<br>
+                • Gunakan command <span style="background:#2a2e3a; padding:0 6px; border-radius:12px;">help</span> untuk terokai produk, harga, dan perkhidmatan coding.<br>
+                • Sistem boleh dibeli terus melalui terminal ini — <strong>taip 'products'</strong> untuk melihat katalog.<br>
+                🧬 <em>"Code. Deploy. Dominate."</em>
+                </div>
+            `);
+            appendToTerminal(`💻 ➜ Taip arahan di bawah. Contoh: products , buy tickpos , about`);
+        }
 
-    cmdForm.addEventListener("submit", onCommandSubmit);
-    inputEl.addEventListener("keydown", handleHistoryKey);
-    inputEl.addEventListener("click", () => inputEl.focus());
-    document.body.addEventListener("click", () => inputEl.focus());
-
-    initWelcome();
+        cmdForm.addEventListener("submit", onCommandSubmit);
+        inputEl.addEventListener("keydown", handleHistoryKey);
+        inputEl.addEventListener("click", () => inputEl.focus());
+        document.body.addEventListener("click", () => inputEl.focus());
+        initWelcome();
+    })();
 </script>
 </body>
 </html>
